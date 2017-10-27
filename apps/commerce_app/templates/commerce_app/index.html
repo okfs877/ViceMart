@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %} 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function initQuoteCarousel() {
+            var $quotesWrapper = $(".cust-quotes");
+            var $quotes = $quotesWrapper.find("blockquote");
+            if (!$quotes.length) {
+                return;
+            }
+            var selectNextQuote = function () {
+                // keep move first quote in dom to the end to make continous
+                var $quote = $quotesWrapper.find("blockquote:first").detach().appendTo($quotesWrapper);
+                setTimeout(selectNextQuote, $quote.data("timeout"));
+            };
+            setTimeout(selectNextQuote, $quotes.filter(":first").data("timeout"));
+        }
+        $(function () {
+            initQuoteCarousel();
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'commerce_app/style.css' %}" />   
+    <title>ViceMart</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <a href="/shop"><img id="logo2" src="{% static "/commerce_app/images/logo2.png" %}" alt="ViceMart Logo" ></a>
+                <div id="topbar"><div id="welcome">Welcome, <a href="/settings">&nbsp;{{request.user.username}}</a>!<a href="/checkout"><img id="cart" src="{% static "/commerce_app/images/cart.png" %}" alt="Shopping cart" ></a></div>
+                <div id="header-right">
+                    <section id="testimonials">
+                        <div class="cust-quotes">
+                            <blockquote data-timeout="4000"><p>The virtue of some people consists wholly in condemning the vices in others.</p><cite>Herbert Samuel</cite></blockquote>
+                            <blockquote data-timeout="4000"><p>The passions of the young are vices in the old.</p><cite>Joseph Joubert</cite></blockquote>
+                            <blockquote data-timeout="5000"><p>You say you want it, but, You can't get it in, You got yourself a bad habit for it.</p><cite>The Kooks</cite></blockquote>
+                            <blockquote data-timeout="6000"><p>The character is of men, never ever of mice, Shorty let me tell you about my only vice, It has to do with lots of loving and it ain't nothing nice</p><cite>A Tribe Called Quest</cite></blockquote>
+                            <blockquote data-timeout="8000"><p>Another vice, another call, Another bed I shouldn't crawl out of, At 7am with shoes in my hand, Said I wouldn't do it, but I did it again, And I know I'll be back tomorrow night. <cite>Miranda Lambert</cite></p></blockquote>
+                        </div>
+                    </section>
+                    <div id="searchbar">
+                        <form action="/search" method="post">
+                            {% csrf_token %}
+                            <input type="text" name="search" placeholder="Search..">
+                            <input type="submit" value="Search!!">
+                        </form>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div id="subheader">
+            {%for category in categories%}
+                <a href="/showCategory/{{category.name}}">{{category.name}} &nbsp;&nbsp;&nbsp;|</a>
+            {%endfor%}
+        </div>
+        <div id="main">
+            {%for product in products%}
+                {%if product.id == 11 or product.id == 22 or product.id == 14 or product.id == 23 %}
+                <div class="prodlist">
+                    <div id="tophalf">{{product.name}}<br>
+                        <img class="viceimg" src ="{{product.image}}">
+                    </div>
+                    <div id="cartform">
+                        <p>{{product.description|safe}}</p>
+                        <p id="price">${{product.price}}</p>
+                        <form id="fillcart" action="/cart/{{product.id}}" method="post">
+                            {%csrf_token%}
+                            <select name="quantity" id="quantity">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            <input id="submit" type="submit" value="Add to Cart">
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            {%endfor%}
+        
+        </div>
+        <div id="footer">
+            <div class="linklist">
+                <ul>
+                    <a href=""><li>Products</li></a>
+                    <a href=""><li>Categories</li></a>
+                    <a href=""><li>Popular</li></a>
+                    <a href=""><li>Affiliates</li></a>
+                </ul>
+            </div>
+            <div class="linklist">
+                <ul>
+                    <a href=""><li>Contact Us</li></a>
+                    <a href=""><li>Technical Support</li></a>
+                    <a href=""><li>Careers</li></a>
+                    <a href=""><li>Press</li></a>
+                </ul>
+            </div>
+            <div class="linklist">
+                <ul>
+                    <a href=""><li>Your Account</li></a>
+                    <a href=""><li>Shopping Cart</li></a>
+                    <a href=""><li>Favorites</li></a>
+                    <a href=""><li>Wishlist</li></a>
+                </ul>
+            </div>
+            <div class="linklist">
+                <ul>
+                    <a href=""><li>Returns</li></a>
+                    <a href=""><li>Shipping</li></a>
+                    <a href=""><li>Locations</li></a>
+                    <a href=""><li>Deals</li></a>
+                </ul>
+            </div>
+        <p>© Copyright 2017  - John and Jessica </p>
+        </div>
+    </div>
+</body>
+</html>
